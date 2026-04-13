@@ -23,6 +23,25 @@
             --shadow-lg: 10px 10px 0 var(--black);
             --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'Space Mono', monospace;
+            --text-muted: #555;
+            --text-subtle: #777;
+            --text-faint: #999;
+        }
+
+        :root[data-theme="dark"] {
+            --black: #f5f0e8;
+            --white: #1f1f1f;
+            --bg: #111111;
+            --yellow: #ffd84d;
+            --pink: #ff7bae;
+            --blue: #53e1d8;
+            --purple: #baa4ff;
+            --orange: #ff9b65;
+            --shadow: 6px 6px 0 #000;
+            --shadow-lg: 10px 10px 0 #000;
+            --text-muted: #c7c7c7;
+            --text-subtle: #a8a8a8;
+            --text-faint: #8f8f8f;
         }
 
         * {
@@ -89,6 +108,29 @@
             background: var(--yellow);
         }
 
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--black);
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            padding: 6px 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+
+        .theme-toggle:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 var(--black);
+        }
+
         /* ── Hero ── */
         .hero {
             min-height: 100vh;
@@ -126,7 +168,7 @@
             font-family: var(--font-mono);
             font-size: 1.15rem;
             margin-bottom: 2rem;
-            color: #555;
+            color: var(--text-muted);
         }
 
         .hero-btns {
@@ -288,7 +330,7 @@
 
         .interest-card p {
             font-size: 0.9rem;
-            color: #555;
+            color: var(--text-muted);
             margin-bottom: 0.75rem;
         }
 
@@ -296,7 +338,7 @@
             font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 700;
-            color: #777;
+            color: var(--text-subtle);
         }
 
         /* ── Projects ── */
@@ -338,7 +380,7 @@
 
         .project-card p {
             font-size: 0.9rem;
-            color: #555;
+            color: var(--text-muted);
             margin-bottom: 1rem;
         }
 
@@ -372,7 +414,7 @@
         .project-card-empty span {
             font-family: var(--font-mono);
             font-size: 0.85rem;
-            color: #999;
+            color: var(--text-faint);
         }
 
         /* ── Contact ── */
@@ -473,6 +515,12 @@
             <li><a href="#interests">Interests</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li>
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+                    <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
+                    <span class="theme-toggle-label">Dark</span>
+                </button>
+            </li>
         </ul>
     </nav>
 
@@ -603,6 +651,29 @@
 
     <!-- Scroll reveal -->
     <script>
+        const root = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const themeLabel = themeToggle.querySelector('.theme-toggle-label');
+
+        const setTheme = (theme) => {
+            const isDark = theme === 'dark';
+            root.setAttribute('data-theme', theme);
+            themeToggle.setAttribute('aria-pressed', String(isDark));
+            themeIcon.className = `bi ${isDark ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`;
+            themeLabel.textContent = isDark ? 'Light' : 'Dark';
+        };
+
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+        themeToggle.addEventListener('click', () => {
+            const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            setTheme(nextTheme);
+            localStorage.setItem('theme', nextTheme);
+        });
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
