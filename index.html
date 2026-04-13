@@ -527,7 +527,7 @@
             <li>
                 <label class="theme-select-wrap" for="themeSelect">
                     <span>Theme</span>
-                    <select id="themeSelect" class="theme-select" aria-label="Theme preference">
+                    <select id="themeSelect" class="theme-select">
                         <option value="system">System</option>
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
@@ -675,21 +675,30 @@
         const validPreferences = ['system', 'light', 'dark'];
         const savedPreference = localStorage.getItem('themePreference');
         const legacyTheme = localStorage.getItem('theme');
-        const initialPreference = validPreferences.includes(savedPreference)
-            ? savedPreference
-            : (legacyTheme === 'light' || legacyTheme === 'dark' ? legacyTheme : 'system');
+        let initialPreference = 'system';
+        if (validPreferences.includes(savedPreference)) {
+            initialPreference = savedPreference;
+        } else if (legacyTheme === 'light' || legacyTheme === 'dark') {
+            initialPreference = legacyTheme;
+        }
+
+        const resolveTheme = (preference) => (
+            preference === 'system'
+                ? (prefersDarkQuery.matches ? 'dark' : 'light')
+                : preference
+        );
 
         const applyThemePreference = (preference) => {
-            const resolvedTheme = preference === 'system'
-                ? (prefersDarkQuery.matches ? 'dark' : 'light')
-                : preference;
+            const resolvedTheme = resolveTheme(preference);
             setTheme(resolvedTheme);
             themeSelect.value = preference;
             localStorage.setItem('themePreference', preference);
-            localStorage.removeItem('theme');
         };
 
         applyThemePreference(initialPreference);
+        if (legacyTheme !== null) {
+            localStorage.removeItem('theme');
+        }
 
         themeSelect.addEventListener('change', (event) => {
             applyThemePreference(event.target.value);
@@ -697,7 +706,7 @@
 
         prefersDarkQuery.addEventListener('change', () => {
             if (themeSelect.value === 'system') {
-                applyThemePreference('system');
+                setTheme(resolveTheme('system'));
             }
         });
 
