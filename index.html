@@ -516,7 +516,7 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
             <li>
-                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false">
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
                     <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
                     <span class="theme-toggle-label">Dark</span>
                 </button>
@@ -665,8 +665,9 @@
         };
 
         const savedTheme = localStorage.getItem('theme');
+        const validSavedTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : null;
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+        setTheme(validSavedTheme || (prefersDark ? 'dark' : 'light'));
 
         themeToggle.addEventListener('click', () => {
             const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
