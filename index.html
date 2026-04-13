@@ -516,7 +516,7 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
             <li>
-                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between dark mode and light mode">
                     <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
                     <span class="theme-toggle-label">Dark</span>
                 </button>
@@ -660,6 +660,7 @@
             const isDark = theme === 'dark';
             root.setAttribute('data-theme', theme);
             themeToggle.setAttribute('aria-pressed', String(isDark));
+            themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
             themeIcon.className = `bi ${isDark ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`;
             themeLabel.textContent = isDark ? 'Light' : 'Dark';
         };
