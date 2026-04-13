@@ -516,7 +516,7 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
             <li>
-                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch between dark mode and light mode">
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
                     <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
                     <span class="theme-toggle-label">Dark</span>
                 </button>
@@ -665,8 +665,9 @@
             themeLabel.textContent = isDark ? 'Light' : 'Dark';
         };
 
+        const validThemes = ['dark', 'light'];
         const savedTheme = localStorage.getItem('theme');
-        const validSavedTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : null;
+        const validSavedTheme = validThemes.includes(savedTheme) ? savedTheme : null;
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         setTheme(validSavedTheme || (prefersDark ? 'dark' : 'light'));
 
