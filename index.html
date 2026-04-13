@@ -108,7 +108,19 @@
             background: var(--yellow);
         }
 
-        .theme-toggle {
+        .theme-select-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--black);
+        }
+
+        .theme-select {
             font-family: var(--font-mono);
             font-size: 0.85rem;
             font-weight: 700;
@@ -120,13 +132,10 @@
             box-shadow: var(--shadow);
             padding: 6px 12px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
             transition: all 0.15s;
         }
 
-        .theme-toggle:hover {
+        .theme-select:hover {
             transform: translate(2px, 2px);
             box-shadow: 4px 4px 0 var(--black);
         }
@@ -516,10 +525,14 @@
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
             <li>
-                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
-                    <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
-                    <span class="theme-toggle-label">Dark</span>
-                </button>
+                <label class="theme-select-wrap" for="themeSelect">
+                    <span>Theme</span>
+                    <select id="themeSelect" class="theme-select" aria-label="Theme preference">
+                        <option value="system">System</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </label>
             </li>
         </ul>
     </nav>
@@ -652,29 +665,40 @@
     <!-- Scroll reveal -->
     <script>
         const root = document.documentElement;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        const themeLabel = themeToggle.querySelector('.theme-toggle-label');
+        const themeSelect = document.getElementById('themeSelect');
+        const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
         const setTheme = (theme) => {
-            const isDark = theme === 'dark';
             root.setAttribute('data-theme', theme);
-            themeToggle.setAttribute('aria-pressed', String(isDark));
-            themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
-            themeIcon.className = `bi ${isDark ? 'bi-sun-fill' : 'bi-moon-stars-fill'}`;
-            themeLabel.textContent = isDark ? 'Light' : 'Dark';
         };
 
-        const validThemes = ['dark', 'light'];
-        const savedTheme = localStorage.getItem('theme');
-        const validSavedTheme = validThemes.includes(savedTheme) ? savedTheme : null;
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setTheme(validSavedTheme || (prefersDark ? 'dark' : 'light'));
+        const validPreferences = ['system', 'light', 'dark'];
+        const savedPreference = localStorage.getItem('themePreference');
+        const legacyTheme = localStorage.getItem('theme');
+        const initialPreference = validPreferences.includes(savedPreference)
+            ? savedPreference
+            : (legacyTheme === 'light' || legacyTheme === 'dark' ? legacyTheme : 'system');
 
-        themeToggle.addEventListener('click', () => {
-            const nextTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            setTheme(nextTheme);
-            localStorage.setItem('theme', nextTheme);
+        const applyThemePreference = (preference) => {
+            const resolvedTheme = preference === 'system'
+                ? (prefersDarkQuery.matches ? 'dark' : 'light')
+                : preference;
+            setTheme(resolvedTheme);
+            themeSelect.value = preference;
+            localStorage.setItem('themePreference', preference);
+            localStorage.removeItem('theme');
+        };
+
+        applyThemePreference(initialPreference);
+
+        themeSelect.addEventListener('change', (event) => {
+            applyThemePreference(event.target.value);
+        });
+
+        prefersDarkQuery.addEventListener('change', () => {
+            if (themeSelect.value === 'system') {
+                applyThemePreference('system');
+            }
         });
 
         const observer = new IntersectionObserver((entries) => {
