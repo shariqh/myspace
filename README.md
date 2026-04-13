@@ -14,4 +14,4 @@ Track personal tasks via [Issues](https://github.com/shariqh/myspace/issues) and
 
 - HTML, CSS, Bootstrap 5
 - GitHub Pages
-- Dark/Light theme toggle
+- System/Light/Dark theme selector

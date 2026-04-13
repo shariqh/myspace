@@ -23,6 +23,27 @@
             --shadow-lg: 10px 10px 0 var(--black);
             --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'Space Mono', monospace;
+            --text-muted: #555;
+            --text-subtle: #777;
+            --text-faint: #999;
+            --accent-ink: #1a1a1a;
+        }
+
+        :root[data-theme="dark"] {
+            --black: #f5f0e8;
+            --white: #1f1f1f;
+            --bg: #111111;
+            --yellow: #ffd84d;
+            --pink: #ff7bae;
+            --blue: #53e1d8;
+            --purple: #baa4ff;
+            --orange: #ff9b65;
+            --shadow: 6px 6px 0 #000;
+            --shadow-lg: 10px 10px 0 #000;
+            --text-muted: #c7c7c7;
+            --text-subtle: #a8a8a8;
+            --text-faint: #8f8f8f;
+            --accent-ink: #111111;
         }
 
         * {
@@ -62,6 +83,7 @@
             background: var(--yellow);
             padding: 4px 12px;
             border: var(--border);
+            color: var(--accent-ink);
         }
 
         .nav-links {
@@ -87,6 +109,79 @@
         .nav-links a:hover {
             border: 2px solid var(--black);
             background: var(--yellow);
+            color: var(--accent-ink);
+        }
+
+        .theme-picker {
+            position: relative;
+        }
+
+        .theme-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+            color: var(--black);
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.15s;
+            padding: 0;
+        }
+
+        .theme-btn:hover,
+        .theme-btn[aria-expanded="true"] {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 var(--black);
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            min-width: 130px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .theme-dropdown[hidden] {
+            display: none;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--black);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--black);
+            padding: 10px 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.1s;
+        }
+
+        .theme-option:last-child {
+            border-bottom: none;
+        }
+
+        .theme-option:hover,
+        .theme-option[aria-checked="true"] {
+            background: var(--yellow);
+            color: var(--accent-ink);
         }
 
         /* ── Hero ── */
@@ -126,7 +221,7 @@
             font-family: var(--font-mono);
             font-size: 1.15rem;
             margin-bottom: 2rem;
-            color: #555;
+            color: var(--text-muted);
         }
 
         .hero-btns {
@@ -164,6 +259,7 @@
 
         .btn-primary {
             background: var(--yellow);
+            color: var(--accent-ink);
         }
 
         .btn-pink {
@@ -218,6 +314,7 @@
             padding: 0 6px;
             border: 2px solid var(--black);
             display: inline;
+            color: var(--accent-ink);
         }
 
         /* ── About ── */
@@ -247,6 +344,7 @@
             padding: 6px 16px;
             border: var(--border);
             margin-top: 1rem;
+            color: var(--accent-ink);
         }
 
         /* ── Interests ── */
@@ -288,7 +386,7 @@
 
         .interest-card p {
             font-size: 0.9rem;
-            color: #555;
+            color: var(--text-muted);
             margin-bottom: 0.75rem;
         }
 
@@ -296,7 +394,7 @@
             font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 700;
-            color: #777;
+            color: var(--text-subtle);
         }
 
         /* ── Projects ── */
@@ -334,11 +432,12 @@
 
         .project-card h3 a:hover {
             background: var(--yellow);
+            color: var(--accent-ink);
         }
 
         .project-card p {
             font-size: 0.9rem;
-            color: #555;
+            color: var(--text-muted);
             margin-bottom: 1rem;
         }
 
@@ -372,7 +471,7 @@
         .project-card-empty span {
             font-family: var(--font-mono);
             font-size: 0.85rem;
-            color: #999;
+            color: var(--text-faint);
         }
 
         /* ── Contact ── */
@@ -402,6 +501,7 @@
             transform: translate(3px, 3px);
             box-shadow: 3px 3px 0 var(--black);
             background: var(--yellow);
+            color: var(--accent-ink);
         }
 
         .contact-link i {
@@ -473,6 +573,22 @@
             <li><a href="#interests">Interests</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li class="theme-picker">
+                <button id="themeBtn" class="theme-btn" aria-label="Change theme" aria-expanded="false" aria-haspopup="true">
+                    <i id="themeIcon" class="bi bi-circle-half"></i>
+                </button>
+                <div id="themeDropdown" class="theme-dropdown" role="menu" hidden>
+                    <button class="theme-option" data-value="system" role="menuitem" aria-checked="false">
+                        <i class="bi bi-circle-half"></i> System
+                    </button>
+                    <button class="theme-option" data-value="light" role="menuitem" aria-checked="false">
+                        <i class="bi bi-sun"></i> Light
+                    </button>
+                    <button class="theme-option" data-value="dark" role="menuitem" aria-checked="false">
+                        <i class="bi bi-moon-stars"></i> Dark
+                    </button>
+                </div>
+            </li>
         </ul>
     </nav>
 
@@ -603,6 +719,82 @@
 
     <!-- Scroll reveal -->
     <script>
+        const root = document.documentElement;
+        const themeBtn = document.getElementById('themeBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeDropdown = document.getElementById('themeDropdown');
+        const themeOptions = themeDropdown.querySelectorAll('.theme-option');
+        const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const ICONS = { system: 'bi-circle-half', light: 'bi-sun', dark: 'bi-moon-stars' };
+
+        const setTheme = (theme) => {
+            root.setAttribute('data-theme', theme);
+        };
+
+        const validPreferences = ['system', 'light', 'dark'];
+        const savedPreference = localStorage.getItem('themePreference');
+        const legacyTheme = localStorage.getItem('theme');
+        let initialPreference = 'system';
+        if (validPreferences.includes(savedPreference)) {
+            initialPreference = savedPreference;
+        } else if (legacyTheme === 'light' || legacyTheme === 'dark') {
+            initialPreference = legacyTheme;
+        }
+
+        const resolveTheme = (preference) => (
+            preference === 'system'
+                ? (prefersDarkQuery.matches ? 'dark' : 'light')
+                : preference
+        );
+
+        const applyThemePreference = (preference) => {
+            const resolvedTheme = resolveTheme(preference);
+            setTheme(resolvedTheme);
+            themeIcon.className = `bi ${ICONS[preference]}`;
+            themeOptions.forEach(opt => {
+                opt.setAttribute('aria-checked', opt.dataset.value === preference ? 'true' : 'false');
+            });
+            localStorage.setItem('themePreference', preference);
+        };
+
+        const closeDropdown = () => {
+            themeDropdown.hidden = true;
+            themeBtn.setAttribute('aria-expanded', 'false');
+        };
+
+        const openDropdown = () => {
+            themeDropdown.hidden = false;
+            themeBtn.setAttribute('aria-expanded', 'true');
+        };
+
+        themeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            themeDropdown.hidden ? openDropdown() : closeDropdown();
+        });
+
+        themeOptions.forEach(opt => {
+            opt.addEventListener('click', () => {
+                applyThemePreference(opt.dataset.value);
+                closeDropdown();
+            });
+        });
+
+        document.addEventListener('click', () => closeDropdown());
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !themeDropdown.hidden) closeDropdown(); });
+
+        applyThemePreference(initialPreference);
+        if (legacyTheme !== null) {
+            localStorage.removeItem('theme');
+        }
+
+        prefersDarkQuery.addEventListener('change', () => {
+            const current = localStorage.getItem('themePreference') || 'system';
+            if (current === 'system') {
+                setTheme(resolveTheme('system'));
+            }
+        });
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
